@@ -1,36 +1,271 @@
-
-/* Add your styles here */
-body{
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
     margin: 0;
     padding: 0;
+    width: 100%;
     height: 100%;
-
-}
-
-
-.body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    height: 100%;
-}
-
-.menuBar {
-    margin : 0;
-    padding: 0;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100vh;
-    width: 20vw;
-    background-color: brown;
-}
-
-#canvas {
-    margin: 0;
-    padding: 0;
-    height: 60vh;
-    width: 60vw;
     background-color: #f0f0f0;
+
+  }
+
+.container-all {
+    display: flex;
+    flex-direction: column;
+    background-color: #2C2C2C;
+    height: 100%;
+    width: 100%;
+
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2C2C2C;
+    color: #ffffff;
+    height: fit-content;
+    width: 100%;
+    text-align: center; 
+    font-size: 16px;
+    font-weight: bold;
+
+}
+
+.title {
+    flex-grow: 1; /* Memperluas elemen sehingga menempatkannya di tengah */
+    text-align: center; /* Menempatkan teks di tengah secara horizontal */
+}
+
+.title h5 {
+    margin: 0;
+}
+
+.title p {
+    margin: 0;
+    font-size: small;
+    font-weight: normal;
+}
+
+.left-tools{
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.left-tools p {
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+}
+
+.left-tools button {
+    background-color: transparent;
+    border-color: #f0f0f0;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    width: auto;
+    height: 100%;
+    cursor: pointer;
+    padding-top: 4px;
+    pointer-events: all;
+    margin-right: 10px;
+}
+
+.left-tools button:hover {
+    background-color: #ffffff; /* Warna background menjadi putih saat di hover */
+}
+
+.left-tools button:hover img {
+    filter: brightness(0); /* Mengubah warna gambar menjadi hitam saat di hover */
+}
+
+.left-tools button:hover::after {
+    content: attr(data-name);
+    position: absolute;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: small;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#rectangle , #square , #polygon {
+    height: 32px;
+}
+
+.input-color {
+    width: 42px;
+    height: 42px;
+    border: none;
+}
+
+.right-tools{
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 70px;
+}
+
+.right-tools button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    color: #fdfdfd;
+    border-color: #f0f0f0;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    width: auto;
+    height: 100%;
+    cursor: pointer;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    pointer-events: all;
+    margin-right: 20px;
+
+}
+
+.right-tools p {
+    margin: 0px;
+    margin-left: 5px;
+    font-size: small;
+}
+
+.container-body {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.left-panel {
+    background-color: #2C2C2C;
+    border-top-color: #444444;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #ffffff;
+    width: fit-content;
+    padding: 20px;
+    padding-right: 100px;
+    height: 100vh;
+    /* z-index: 2; */
+}
+
+.left-panel h3 {
+    margin: 0;
+}
+
+.right-panel {
+    background-color: #2C2C2C;
+    border-top-color: #444444;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #ffffff;
+    width: fit-content;
+    height: 100vh;
+    padding: 20px;
+    /* z-index: 2; */
+}
+
+.right-panel h3 {
+    margin: 0;
+}
+
+.container-edit {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-delete {
+    display: flex;
+    flex-direction: row;
+}
+
+.edit-delete button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    color: #ffffff;
+    border-width: 1px;
+    border-color: #ffffff;
+    padding: 8px;
+    border-style: solid;
+    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: small;
+}
+
+.edit-delete i {
+    margin-right: 10px;
+
+}
+
+.edit-delete p {
+    margin: 0;
+}
+
+.input-color {
+    width: 100px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+}
+
+.item-feature {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    padding-right: 30px;
+}
+
+
+.content {
+    flex: 1;
+    position: relative;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+}
+
+/* .objectList {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 200px; 
+    background-color: #fff; 
+    overflow-y: auto; 
+} */
+/* 
+
+.objectList{
+    color: #000;
+    width: 300px;
+    padding-left: 10px;
+    padding-top: 10px;
+  } */
+
+
+/* button hover warna background jadi putih dan warna jadi hitam */
+button:hover {
+    background-color: #ffffff;
+    color: #000000;
 }

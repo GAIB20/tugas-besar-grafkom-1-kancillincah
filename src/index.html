@@ -6,27 +6,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAD</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
 </head>
 <body>
-    <div class="header">
-        CAD
+    <div class="nav-bar">
+        <div class="left-tools">
+            <p>Model: </p>
+            <button id="line" data-name="Draw Line">
+                <img src="assets/line.svg" alt="line" width="20px" height="20px">
+            </button>
+            <button id="square" data-name="Draw Square">
+                <img src="assets/square.svg" alt="square" width="20px" height="20px">
+            </button>
+            <button id="rectangle" data-name="Draw Rectangle">
+                <img src="assets/rectangle.svg" alt="rectangle" width="20px" height="20px">
+            </button>
+            <button id="polygon" data-name="Draw Polygon">
+                <img src="assets/polygon.svg" alt="polygon" width="20px" height="20px">             
+            </button>
+        </div>
+        <div class="title">
+            <h5> 2D Web Based CAD </h5>
+            <p> namafile </p>
+        </div>
+        <div class="right-tools">
+            <button id="load">
+                <i class="fas fa-upload"></i>
+                <p> Load </p>
+            </button>
+            <button id="save">
+                <i class="fas fa-save"></i>
+                <p> Save </p>
+            </button>
+        </div>
     </div>
-    <div class="body">
-        <div class="menuBar">
-            <button id="line">Draw Line</button>
-            <button id="square">Square</button>
-            <button id="rectangle">Rectangle</button>
-            <input type="color" id="color" name="color" value="#000000" />
-            
+    <div class="container-body">
+        <div class="left-panel">
+            <h3>Object List</h3>
+            <div id="List"></div>
         </div>
         <div class="content">
-            <canvas id="canvas" width="800" height="800"></canvas>
+            <canvas id="canvas"></canvas>
             <div class="objectList">
                 <div id="List"></div>
             </div>
         </div>
+        <div class="right-panel">
+            <h3>Edit Object</h3>
+            <div class="container-edit">
+                <div class="edit-delete">
+                    <button id="edit">
+                        <i class="fas fa-edit"></i>
+                        <p> Edit object </p>
+                    </button>
+                    <button id="clear">
+                        <i class="fas fa-trash"></i>
+                        <p> Delete object </p>
+                    </button>
+                </div>
+                <form >
+                    <div class="item-feature">
+                        <label for="color">Color</label>
+                        <input class ="input-color" type="color" id="color" name="color" value="#000000" />
+                    </div>
+                    <div class="item-feature">
+                        <label for="x-translation"> Translation-X </label>
+                        <input
+                          type="range"
+                          min="-1"
+                          max="1"
+                          step="0.1"
+                          value="0"
+                          id="x-translation"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="y-translation"> Translation-Y </label>
+                        <input
+                          type="range"
+                          min="-1"
+                          max="1"
+                          step="0.1"
+                          value="0"
+                          id="y-translation"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="rotation"> Rotation </label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="360"
+                          step="10"
+                          value="0"
+                          id="rotation"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="dilation"> Dilation </label>
+                        <input
+                          type="range"
+                          min="0.1"
+                          max="2"
+                          step="0.1"
+                          value="1"
+                          id="dilation"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="shear"> Shear-X </label>
+                        <input
+                          type="range"
+                          min="-1"
+                          max="1"
+                          step="0.1"
+                          value="0"
+                          id="shear"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="shearY"> Shear-Y </label>
+                        <input
+                          type="range"
+                          min="-1"
+                          max="1"
+                          step="0.1"
+                          value="0"
+                          id="shearY"
+                        />
+                    </div>
+                    <div class="item-feature">
+                        <label for="Size">Size</label>
+                        <input
+                          type="range"
+                          min="5"
+                          max="360"
+                          step="20"
+                          value="100"
+                          id="size"
+                        />
+                    </div>
+                  </form>
+            </div>
+            <div class="feature"></div>
+        </div>
     </div>
+    
     <script src="utils.js"></script>
     <script src="shape.js"></script>
     <script src="main.js"></script>
