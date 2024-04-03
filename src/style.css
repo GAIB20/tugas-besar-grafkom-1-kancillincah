@@ -157,7 +157,6 @@ body {
     color: #ffffff;
     width: fit-content;
     padding: 20px;
-    padding-right: 100px;
     height: 100vh;
     /* z-index: 2; */
 }
@@ -187,12 +186,12 @@ body {
     flex-direction: column;
 }
 
-.edit-delete {
+.edit-delete, .draw-polygon {
     display: flex;
     flex-direction: row;
 }
 
-.edit-delete button {
+.edit-delete button, .draw-polygon button {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -215,7 +214,7 @@ body {
 
 }
 
-.edit-delete p {
+.edit-delete p, .draw-polygon p {
     margin: 0;
 }
 
