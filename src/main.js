@@ -7,7 +7,8 @@ let shape = {
   rectangle: [],
   polygon: [],
 };
-
+let polyPoints = [];
+let isPolygonActve = false;
 let rgb = "#000000";
 let editFlag = false;
 let shapeSelection = []
@@ -31,6 +32,22 @@ squareButton.addEventListener("click", function () {
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
+    console.log(drawType);
+});
+const polygonButton = document.getElementById("polygon");
+polygonButton.addEventListener("click", function () {
+  if (isPolygonActve == true) {
+    shape["polygon"][shape["polygon"].length - 1].vertexRemoved();
+    polyPoints = [];
+    isPolygonActve = false;
+    drawType = "";
+    getObject("polygon", shape["polygon"].length, shape["polygon"][shape["polygon"].length - 1].points.length);
+    getAllPoint("polygon", shape["polygon"].length);
+  }
+  else {
+    drawType = "polygon";
+  }
+  
 });
 
 
@@ -109,16 +126,37 @@ editButton.addEventListener("click", function () {
 /* ==== Canvas ==== */
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
-  if (isDown) {
-    let { x, y } = getMousePosition(canvas, e);
-    onMove(drawType, x, y);
-  }
+  if (drawType == "polygon") {
+    if (polyPoints.length > 0) {
+      let { x, y } = getMousePosition(canvas, e);
+      onMove(drawType, x, y);
+    }
+  }else {
+    if (isDown) {
+      let { x, y } = getMousePosition(canvas, e);
+      onMove(drawType, x, y);
+    }
+ }
 });
 
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   isDown = true;
-  draw(drawType, x, y);
+  if (drawType != "polygon") {
+    draw(drawType, x, y);
+  }else if (drawType == "polygon"){
+    if (polyPoints.length == 0) {
+      console.log("start");
+      let [w, h] = coor(canvas, x, y);
+      draw(drawType, x, y);
+      polyPoints.push([w, h]);
+    }else {
+      let [w, h] = coor(canvas, x, y);
+      polyPoints.push([w, h]);
+      isPolygonActve = true;
+      addVertexPolygon(x, y);
+    }
+  }
 });
 
 canvas.addEventListener("mouseup", function (e) {
@@ -173,9 +211,20 @@ function onMove(type, x, y) {
     let lenObject = shape["rectangle"].length;
     shape["rectangle"][lenObject - 1].onRenderMove(w, h);
   }
+  else if (type === "polygon") {
+    let lenObject = shape["polygon"].length;
+    shape["polygon"][lenObject - 1].onRenderMove(w, h);
+  }
   else {
     return;
   }
+}
+
+function addVertexPolygon(x, y) {
+  let [w, h] = coor(canvas, x, y);
+  let lenObject = shape["polygon"].length;
+  shape["polygon"][lenObject - 1].vertexAdded(w, h);
+  // console.log(shape["polygon"][lenObject - 1].points);
 }
 
 function loadShader(type, input) {
@@ -264,11 +313,18 @@ function draw(model, x, y) {
       shape.rectangle.push(new Rectangle(x, y, program));
       length = shape.rectangle.length;
       indexPoint = shape.rectangle[length - 1].points.length;
-  } else {
+  } else if (model === "polygon") {
+      shape.polygon.push(new Polygon(x, y, program));
+      length = shape.polygon.length;
+      indexPoint = shape.polygon[length - 1].points.length;
+  }
+  else {
       return;
   }
-  getObject(model, length, indexPoint);
-  getAllPoint(model, length)
+  if (drawType != "polygon") {
+    getObject(model, length, indexPoint);
+    getAllPoint(model, length)
+  }
 }
 
 function resetState() {

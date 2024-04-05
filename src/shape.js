@@ -18,7 +18,6 @@ class Shape {
   }
 }
 
-/* TODO: Define inheritance of the models */
 class Line extends Shape {
   constructor(x, y) {
     super();
@@ -125,6 +124,49 @@ class Rectangle extends Shape {
     this.points[len - 2][1] = y;
     this.points[len - 3][0] = x;
   }
+}
+
+class Polygon extends Shape {
+  constructor(x, y) {
+    super();
+    let { r, g, b } = getRGB(rgb);
+    for (let i = 0; i < 2; i++) {
+      this.colors.push([r, g, b, 1]);
+      this.points.push(coor(canvas, x, y));
+    }
+  }
+
+  render(program) {
+    this.setCentroid();
+    renderColor(program, flatten(this.colors), 4);
+    renderVertex(program, flatten(this.points), 2);
+    if (this.points.length == 2) {
+      for (let i = 0; i < this.points.length; i += 2) {
+        gl.drawArrays(gl.LINES, i, 2);
+      }
+    }
+    else {
+      gl.drawArrays(gl.TRIANGLE_FAN, 0, this.points.length);
+    }
+  }
+
+  onRenderMove(x, y) {
+    let len = this.points.length;
+    this.points[len - 1][0] = x;
+    this.points[len - 1][1] = y;
+  }
+
+  vertexAdded(x, y){
+    this.points.push(coor(canvas, x, y))
+    let { r, g, b } = getRGB(rgb);
+    this.colors.push([r, g, b, 1]);
+  }
+
+  vertexRemoved(){
+    this.points.pop();
+    this.colors.pop();
+  }
+
 }
 
 
