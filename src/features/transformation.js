@@ -22,6 +22,11 @@ function getObject(shape, indexObject, indexPoint) {
     }
 }
 
+function clearGetObject() {
+    var list = document.getElementById("List");
+    list.innerHTML = ''; // Clear all child elements
+}
+
 function getAllPoint(shape, indexObject) {
     let objectSelection = document.getElementById(`${shape}${indexObject}`);
     objectSelection.addEventListener("change", function () {

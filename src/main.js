@@ -61,6 +61,10 @@ clearButton.addEventListener("click", function (e) {
     }
 });
 
+const loadButton = document.getElementById("load");
+loadButton.addEventListener("click", function () {
+  load();
+});
 
 /* ==== Edit Button ==== */ 
 const editButton = document.getElementById("edit");
@@ -339,6 +343,7 @@ function draw(model, x, y) {
   }
   if (drawType != "polygon") {
     getObject(model, length, indexPoint);
+    console.log(model, length, indexPoint);
     getAllPoint(model, length)
   }
 }
@@ -355,6 +360,74 @@ function save() {
   document.body.removeChild(a);
 }
 
+function drawShape(model, points, colors, centroid) {
+  let obj;
+  switch (model) {
+    case "line":
+      obj = new Line(0, 0);
+      break;
+    case "square":
+      obj = new Square(0, 0);
+      break;
+    case "rectangle":
+      obj = new Rectangle(0, 0);
+      break;
+    case "polygon":
+      obj = new Polygon(polyPoints);
+      break;
+    default:
+      console.error("Invalid shape model");
+      return;
+  }
+
+  obj.points = points;
+  obj.colors = colors;
+  obj.centroid = centroid;
+
+  shape[model].push(obj);
+
+  // Render the object
+  obj.render(program);
+
+  // Update object selection and points
+  getObject(model, shape[model].length, obj.points.length);
+  getAllPoint(model, shape[model].length);
+}
+
+
+function load() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+
+  input.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function() {
+      const data = JSON.parse(reader.result);
+
+      // Clear existing shapes before loading new ones
+      reset();
+      clearGetObject();
+
+      // Iterate through each shape type in the loaded data
+      Object.keys(data).forEach(model => {
+        data[model].forEach(shapeData => {
+          const points = shapeData.points;
+          const colors = shapeData.colors;
+          const centroid = shapeData.centroid;
+          drawShape(model, points, colors, centroid);
+        });
+      });
+      renderObject();
+    };
+
+    reader.readAsText(file);
+  };
+
+  input.click();
+}
 
 
 function reset() {
