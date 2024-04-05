@@ -32,7 +32,6 @@ squareButton.addEventListener("click", function () {
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
-    console.log(drawType);
 });
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
@@ -48,6 +47,10 @@ polygonButton.addEventListener("click", function () {
     drawType = "polygon";
   }
   
+});
+const saveButton = document.getElementById("save");
+saveButton.addEventListener("click", function () {
+  save();
 });
 
 
@@ -308,7 +311,21 @@ function draw(model, x, y) {
   }
 }
 
-function resetState() {
+function save() {
+  const shapeJSON = JSON.stringify(shape, null, 2);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([shapeJSON], {
+    type: "text/plain"
+  }))
+  a.setAttribute("download", "shape.json");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+
+
+function reset() {
   shape.line = [];
   shape.polygon = [];
   shape.rectangle = [];
