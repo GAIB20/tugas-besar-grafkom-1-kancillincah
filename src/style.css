@@ -244,24 +244,11 @@ canvas {
     background-color: #f0f0f0;
 }
 
-/* .objectList {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 200px; 
-    background-color: #fff; 
-    overflow-y: auto; 
-} */
-/* 
+.draw-polygon{
+    display: flex;
+    flex-direction: column;
 
-.objectList{
-    color: #000;
-    width: 300px;
-    padding-left: 10px;
-    padding-top: 10px;
-  } */
-
+}
 
 /* button hover warna background jadi putih dan warna jadi hitam */
 button:hover {
