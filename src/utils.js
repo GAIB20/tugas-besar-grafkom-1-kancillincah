@@ -76,3 +76,54 @@ function flatten(matrix) {
 
   return result;
 }
+
+function orientation(p, q, r) {
+  const val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1]);
+  if (val === 0) return 0;
+  return val > 0 ? 1 : -1;
+}
+
+function distance(p, q) {
+  const dx = q[0] - p[0];
+  const dy = q[1] - p[1];
+  return dx * dx + dy * dy; 
+}
+
+function convexHull(points) {
+  const n = points.length;
+  if (n < 3) return [];
+
+  let minY = Infinity;
+  let minIndex = -1;
+  for (let i = 0; i < n; i++) {
+      if (points[i][1] < minY || (points[i][1] === minY && points[i][0] < points[minIndex][0])) {
+          minY = points[i][1];
+          minIndex = i;
+      }
+  }
+
+  if (minIndex !== 0) {
+      [points[0], points[minIndex]] = [points[minIndex], points[0]];
+  }
+
+  points.sort((a, b) => {
+      const angle = orientation(points[0], a, b);
+      if (angle === 0) {
+          return distance(points[0], a) - distance(points[0], b);
+      }
+      return angle;
+  });
+
+  const stack = [points[0], points[1]];
+
+  for (let i = 2; i < n; i++) {
+      let top = stack.length - 1;
+      while (top > 0 && orientation(stack[top - 1], stack[top], points[i]) !== -1) {
+          stack.pop();
+          top--;
+      }
+      stack.push(points[i]);
+  }
+
+  return stack;
+}
