@@ -33,6 +33,7 @@ const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
 });
+
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
   if (isPolygonActve == true) {
@@ -51,6 +52,13 @@ polygonButton.addEventListener("click", function () {
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", function () {
   save();
+});
+
+const clearButton = document.getElementById("clear-canvas");
+clearButton.addEventListener("click", function (e) {
+    if (!editFlag) {
+        location.reload();
+    }
 });
 
 
@@ -192,6 +200,11 @@ const fragmentShaderText = `
 
 const gl = canvas.getContext("webgl");
 const program = createShaderProgram(vertexShaderText, fragmentShaderText);
+
+window.onload = function start () {
+  clear();
+};
+
 
 function clear() {
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
