@@ -77,6 +77,12 @@ editButton.addEventListener("click", function () {
     translateXObject(shapeSelection, pointSelection, indexPoint, translationXSlider.value)
   });
 
+  // translation Y
+  const translationYSlider = document.getElementById("translationY");
+  translationYSlider.addEventListener("input", function () {
+    translateYObject(shapeSelection, pointSelection, indexPoint, translationYSlider.value)
+  });
+
 
   // color
   const colorSlider = document.getElementById("color");

@@ -239,3 +239,91 @@ function translateXObject(shapeSelection, pointSelection, indexPoint, value) {
     });
     tempTranslationX = translationX;       
 }
+
+function translateYObject(shapeSelection, pointSelection, indexPoint, value) {
+    console.log(value);
+    let translationY = value;
+
+    console.log("shapeSelection", shapeSelection);
+    shapeSelection.forEach(shape => {
+        shape.points.forEach(point => {
+            point[1] += translationY - tempTranslationY;
+        });
+    });
+
+    pointSelection.forEach((point, index) => {
+        let shape = point
+        if (shape.constructor.name == "Square") {
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex + 1][1] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex + 2][0] += translationY - tempTranslationY;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex + 2][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex - 1][1] -= translationY - tempTranslationY;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex - 2][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex + 1][1] -= translationY - tempTranslationY;
+            } else {
+                shape.points[squarePointIndex][0] += translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex - 1][1] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex - 2][0] += translationY - tempTranslationY;
+            }
+            
+        } else if (shape.constructor.name == "Rectangle") {
+            let ratio = 
+                (shape.points[0][0] - shape.points[1][0]) /
+                (shape.points[0][1] - shape.points[2][1]);
+            if (ratio < 0) {
+                ratio *= -1;
+            }
+            let width = translationY - tempTranslationY;
+            let height = width / ratio;
+
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex + 1][1] -= height;
+                shape.points[squarePointIndex + 2][0] += width;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] -= width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex + 2][0] -= width;
+                shape.points[squarePointIndex - 1][1] -= height;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] -= width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex - 2][0] -= width;
+                shape.points[squarePointIndex + 1][1] -= height;
+            } else {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex - 1][1] -= height;
+                shape.points[squarePointIndex - 2][0] += width;
+            }
+        } else {
+            shape.points[indexPoint[index] - 1][1] += translationY - tempTranslationY;
+        }
+    });
+   tempTranslationY = translationY;
+}
+
+
+
+
