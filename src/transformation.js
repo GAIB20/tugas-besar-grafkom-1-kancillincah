@@ -110,24 +110,26 @@ function getSelectedObject(array) {
 function rotateObject(shapeSelection, value) {
     console.log(value);
     let rotation = (value * Math.PI) / 180;
-    for (let p = 0; p < shapeSelection.length; p++) {
-        let shape = shapeSelection[p];
-        console.log(shape)
-        console.log(shapeSelection)
+
+    shapeSelection.forEach(shape => {
+        console.log(shape);
         let center = centroid(shape.points);
-        //rotation on coordinate
-        for (let i = 0; i < shape.points.length; i += 1) {
-            const x = shape.points[i][0] - center[0];
-            const y = shape.points[i][1] - center[1];
-            shape.points[i][0] =
-            x * Math.cos(rotation - tempRotation) -
-            y * Math.sin(rotation - tempRotation) +
-            center[0];
-            shape.points[i][1] =
-            x * Math.sin(rotation - tempRotation) +
-            y * Math.cos(rotation - tempRotation) +
-            center[1];
-        }
-    }
+
+        // Rotation on coordinates
+        shape.points.forEach(point => {
+            const x = point[0] - center[0];
+            const y = point[1] - center[1];
+
+            point[0] =
+                x * Math.cos(rotation - tempRotation) -
+                y * Math.sin(rotation - tempRotation) +
+                center[0];
+            point[1] =
+                x * Math.sin(rotation - tempRotation) +
+                y * Math.cos(rotation - tempRotation) +
+                center[1];
+        });
+    });
+
     tempRotation = rotation;
 }
