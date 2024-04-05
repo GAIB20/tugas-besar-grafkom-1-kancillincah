@@ -1,4 +1,6 @@
 let tempRotation = 0;
+let tempDilataion = 1;
+let tempTranslationX = 0;
 
 function getObject(shape, indexObject, indexPoint) {
     var list = document.getElementById("List");
@@ -133,3 +135,23 @@ function rotateObject(shapeSelection, value) {
 
     tempRotation = rotation;
 }
+
+function dilateObject(shapeSelection, value) {
+    console.log(value);
+    let dilatation = value;
+
+    shapeSelection.forEach(shape => {
+        let center = centroid(shape.points);
+
+        // Dilation on coordinates
+        shape.points.forEach(point => {
+            const x = point[0] - center[0];
+            const y = point[1] - center[1];
+
+            point[0] = center[0] + ((point[0] - center[0]) * dilatation) / tempDilataion;
+            point[1] = center[1] + ((point[1] - center[1]) * dilatation) / tempDilataion;
+        });
+    });
+    tempDilataion = dilatation;
+}
+

@@ -65,6 +65,19 @@ editButton.addEventListener("click", function () {
       rotateObject(shapeSelection, rotationSlider.value)
   });
 
+  // dilatation
+  const dilatationSlider = document.getElementById("dilatation");
+  dilatationSlider.addEventListener("input", function () {
+    dilateObject(shapeSelection, dilatationSlider.value)
+  });
+
+  // translation X
+  const translationXSlider = document.getElementById("translationX");
+  translationXSlider.addEventListener("input", function () {
+    translateXObject(shapeSelection, translationXSlider.value)
+  });
+
+
   // color
   const colorSlider = document.getElementById("color");
   colorSlider.addEventListener("input", function () {
