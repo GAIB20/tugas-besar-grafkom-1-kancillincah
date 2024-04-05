@@ -13,6 +13,9 @@ let editFlag = false;
 let shapeSelection = []
 let pointSelection = []
 let indexPoint = []
+let startFlag = false;
+let animationId;
+let animation;
 
 /* ==== Element and event listener ==== */
 const lineButton = document.getElementById("line");
@@ -30,8 +33,9 @@ rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
 });
 
-const editButton = document.getElementById("edit");
 
+/* ==== Edit Button ==== */ 
+const editButton = document.getElementById("edit");
 editButton.addEventListener("click", function () {
   editFlag = !editFlag
   
@@ -66,8 +70,24 @@ editButton.addEventListener("click", function () {
   colorSlider.addEventListener("input", function () {
       colorObject(shapeSelection, pointSelection, indexPoint, colorSlider.value)
   });
+
+  // animation
+  const animationButton = document.getElementById("animation");
+  animationButton.addEventListener("click", function () {
+    startFlag = !startFlag
+    if (startFlag) {
+      animationButton.innerHTML = '<i class="fas fa-pause"></i><p> Stop Animation </p>';
+      animation = animationObject(shapeSelection, pointSelection, indexPoint);
+    } else {
+        animationButton.innerHTML = '<i class="fas fa-play"></i><p> Start Animation </p>';
+        animation.stopAnimation();
+        animation = null;
+    }
+  });
 });
 
+
+/* ==== Canvas ==== */
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
   if (isDown) {
@@ -164,8 +184,6 @@ function createShaderProgram(vertexShaderText, fragmentShaderText) {
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
-
-
 
   gl.deleteShader(vertexShader);
   gl.deleteShader(fragmentShader);
