@@ -8,6 +8,7 @@ let shape = {
   polygon: [],
 };
 let polyPoints = [];
+let polygonEdit;
 let isPolygonActve = false;
 let rgb = "#000000";
 let editFlag = false;
@@ -17,6 +18,7 @@ let indexPoint = []
 let startFlag = false;
 let animationId;
 let animation;
+let isAddVertex = false;
 
 /* ==== Element and event listener ==== */
 const lineButton = document.getElementById("line");
@@ -76,7 +78,8 @@ editButton.addEventListener("click", function () {
   } else {
       editButton.innerHTML = '<i class="fas fa-edit"></i><p> Edit object </p>';
       // if model is polygon, then we need to check if the polygon is convex or not
-      for (let i = 0; i < shape["polygon"].length; i++) {
+      let len = shape["polygon"].length
+      for (let i = 0; i < len; i++) {
           if (shape["polygon"][i].points.length > 2) {
               shape["polygon"][i].points = convexHull(shape["polygon"][i].points);
           }
@@ -129,6 +132,22 @@ editButton.addEventListener("click", function () {
       colorObject(shapeSelection, pointSelection, indexPoint, colorSlider.value)
   });
 
+  // const addButton = document.getElementById("add_point");
+  // addButton.addEventListener("click", function () {
+  //   polygonEdit = shapeSelection
+  //   isAddVertex = true;
+  //   for (let i = 0; i < shape["polygon"].length; i++) {
+  //     if (shape[polygon][i] == polygonEdit) {
+  //       shape[polygon][i].vertexAdded(0, 0)
+  //     }
+  //   }
+  // });
+
+  const deleteButton = document.getElementById("remove_point");
+  deleteButton.addEventListener("click", function () {
+    deleteVertexPolygon(shapeSelection, pointSelection, indexPoint);
+  });
+
   // animation
   const animationButton = document.getElementById("animation");
   animationButton.addEventListener("click", function () {
@@ -148,6 +167,10 @@ editButton.addEventListener("click", function () {
 /* ==== Canvas ==== */
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
+  if (isAddVertex) {
+    let { x, y } = getMousePosition(canvas, e);
+    onMoveAddVertex(x, y);
+  }
   if (drawType == "polygon") {
     if (polyPoints.length > 0) {
       let { x, y } = getMousePosition(canvas, e);
@@ -164,6 +187,10 @@ canvas.addEventListener("mousemove", function (e) {
 canvas.addEventListener("mousedown", function (e) {
   let { x, y } = getMousePosition(canvas, e);
   isDown = true;
+  if (isAddVertex) {
+    isAddVertex = false;
+    polygonEdit = null;
+  }
   if (drawType != "polygon") {
     draw(drawType, x, y);
   }else if (drawType == "polygon"){
@@ -220,6 +247,16 @@ window.onload = function start () {
 function clear() {
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+}
+
+function onMoveAddVertex(x, y) {
+  let [w, h] = coor(canvas, x, y);
+  // check for loop the shape[polygon] == shape
+  for (let i = 0; i < shape[polygon].length; i++) {
+    if (shape[polygon][i] == polygonEdit) {
+      shape[polygon][i].onRenderMove(w, h);
+    }
+  }
 }
 
 function onMove(type, x, y) {
