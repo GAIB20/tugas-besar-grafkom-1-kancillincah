@@ -74,7 +74,7 @@ editButton.addEventListener("click", function () {
   // translation X
   const translationXSlider = document.getElementById("translationX");
   translationXSlider.addEventListener("input", function () {
-    translateXObject(shapeSelection, translationXSlider.value)
+    translateXObject(shapeSelection, pointSelection, indexPoint, translationXSlider.value)
   });
 
 
