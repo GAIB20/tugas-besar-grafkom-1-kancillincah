@@ -1,4 +1,6 @@
 /* ==== Element and event listener ==== */
+let isEditing = false;
+
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
     drawType = "line";
@@ -14,9 +16,35 @@ rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
 });
 
+const editButton = document.getElementById("edit");
+editButton.addEventListener("click", function () {
+  isEditing = true;
+  if (isEditing) {
+    editButton.textContent = "Stop edit";
+  } else {
+    editButton.textContent = "Edit";
+    uncheckObject();
+  }
+  document.getElementById("dilatation").value = "1";
+  document.getElementById("shearX").value = "0";
+  document.getElementById("shearY").value = "0";
+  drawType = "edit";
+  editObject();
+});
 
+const clearButton = document.getElementById("clear");
+clearButton.addEventListener("click", function (e) {
+  if (!isEditing) {
+    location.reload();
+  } else {
+    alert("Click finish button first!");
+  }
+});
 
-
+const scaleSlider = document.getElementById("size");
+scaleSlider.addEventListener("input", function (e) {
+  size = parseInt(scaleSlider.value);
+});
 
 
 const canvas = document.getElementById("canvas");
@@ -35,6 +63,21 @@ canvas.addEventListener("mousedown", function (e) {
 
 canvas.addEventListener("mouseup", function (e) {
   isDown = false;
+});
+
+const saveButton = document.getElementById("save");
+saveButton.addEventListener("click", function () {
+  if (!isEditing) {
+    let file = save();
+    let link = document.createElement("a");
+    link.setAttribute("download", "save.json");
+    link.href = file;
+    document.body.appendChild(link);
+    link.click();
+    alert("File saved");
+  } else {
+    alert("Click finish button first!");
+  }
 });
 
 const colorInput = document.getElementById("color");
@@ -177,16 +220,22 @@ function renderVertex(program, arr = [], size = 3) {
 }
 
 function draw(model, x, y) {
+  console.log("draw model", model, "at", x, y);
   
   if (model === "line") {
     shape.line.push(new Line(x, y, program));
+    printModels("line", shape.line);
+    console.log(shape.line);
   } 
   else if (model === "square") {
     shape.square.push(new Square(x, y, program));
     console.log(shape.square);
+    printModels("square", shape.square);
   }
   else if (model === "rectangle") {
     shape.rectangle.push(new Rectangle(x, y, program));
+    printModels("rectangle", shape.rectangle);
+    console.log(shape.rectangle);
   }
   else {
     return;
@@ -201,6 +250,19 @@ function resetState() {
   shape.rectangle = [];
   shape.square = [];
   polyPoints = [];
+}
+
+function save() {
+  let jsonFile = JSON.stringify(models);
+  let data = new Blob([jsonFile], { type: "application/json" });
+
+  /* if already exists remove */
+  if (savedFile !== null) {
+    window.URL.revokeObjectURL(savedFile);
+  }
+
+  savedFile = window.URL.createObjectURL(data);
+  return savedFile;
 }
 
 function renderObject() {
