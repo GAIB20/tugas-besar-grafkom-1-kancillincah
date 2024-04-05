@@ -341,6 +341,23 @@ function translateYObject(shapeSelection, pointSelection, indexPoint, value) {
    tempTranslationY = translationY;
 }
 
+function deleteVertexPolygon(shapeSelection, pointSelection, indexPoint) {
+    
+    pointSelection.forEach((point, index) => {
+        let shape = point
+       if (shape.constructor.name == "Polygon") {
+            let polygonPointIndex = indexPoint[index] - 1;
+            shape.points.splice(polygonPointIndex, 1);
+        }
+    });
+
+}
+
+
+// function addVertexPolygon(shapeSelection, pointSelection, indexPoint) {
+
+// }
+
 
 
 
