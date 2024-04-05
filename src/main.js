@@ -14,7 +14,10 @@ rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
 });
 
-
+const editButton = document.getElementById("edit");
+editButton.addEventListener("click", function () {
+  editFlag = !editFlag
+})
 
 
 
@@ -75,6 +78,7 @@ let shape = {
 };
 
 let rgb = "#000000";
+let editFlag = false;
 
 
 function clear() {
@@ -178,22 +182,26 @@ function renderVertex(program, arr = [], size = 3) {
 
 function draw(model, x, y) {
   
+  let length = 0
   if (model === "line") {
-    shape.line.push(new Line(x, y, program));
+    shape.line.push(new Line(x, y, program))
+    length = shape.line.length
   } 
   else if (model === "square") {
     shape.square.push(new Square(x, y, program));
     console.log(shape.square);
+    length = shape.square.length
   }
   else if (model === "rectangle") {
     shape.rectangle.push(new Rectangle(x, y, program));
+    length = shape.rectangle.length
   }
   else {
     return;
   }
+  getObject(model,length)
+  console.log(model)
 }
-
-
 
 function resetState() {
   shape.line = [];
