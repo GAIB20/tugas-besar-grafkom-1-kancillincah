@@ -1,3 +1,19 @@
+let drawType = null;
+let size = 0;
+let isDown = false;
+let shape = {
+  line: [],
+  square: [],
+  rectangle: [],
+  polygon: [],
+};
+
+let rgb = "#000000";
+let editFlag = false;
+let shapeSelection = []
+let pointSelection = []
+let indexPoint = []
+
 /* ==== Element and event listener ==== */
 const lineButton = document.getElementById("line");
 lineButton.addEventListener("click", function () {
@@ -15,12 +31,35 @@ rectangleButton.addEventListener("click", function () {
 });
 
 const editButton = document.getElementById("edit");
+
 editButton.addEventListener("click", function () {
   editFlag = !editFlag
-})
+  
+  if (editFlag) {
+      editButton.innerHTML = '<i class="fas fa-edit"></i><p> Finish Edit </p>';
+  } else {
+      editButton.innerHTML = '<i class="fas fa-edit"></i><p> Edit object </p>';
+      uncheckAllCheckboxes();
+  }
 
+  let checkedShapes = getCheckedShapes();
+  let list = getSelectedObject(checkedShapes);
+  console.log(checkedShapes);
+  console.log(list);
 
+  shapeSelection = list[0];
+  pointSelection = list[1];
+  indexPoint = list[2];
 
+  console.log(shapeSelection);
+  console.log(pointSelection);
+  console.log(indexPoint);
+  
+  const rotationSlider = document.getElementById("rotation");
+  rotationSlider.addEventListener("input", function () {
+      rotateObject(shapeSelection, rotationSlider.value)
+  });
+});
 
 const canvas = document.getElementById("canvas");
 canvas.addEventListener("mousemove", function (e) {
@@ -66,20 +105,6 @@ const fragmentShaderText = `
 
 const gl = canvas.getContext("webgl");
 const program = createShaderProgram(vertexShaderText, fragmentShaderText);
-
-let drawType = null;
-let size = 0;
-let isDown = false;
-let shape = {
-  line: [],
-  square: [],
-  rectangle: [],
-  polygon: [],
-};
-
-let rgb = "#000000";
-let editFlag = false;
-
 
 function clear() {
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
@@ -181,26 +206,25 @@ function renderVertex(program, arr = [], size = 3) {
 }
 
 function draw(model, x, y) {
-  
-  let length = 0
+  let length = 0;
+  let indexPoint = 0;
   if (model === "line") {
-    shape.line.push(new Line(x, y, program))
-    length = shape.line.length
-  } 
-  else if (model === "square") {
-    shape.square.push(new Square(x, y, program));
-    console.log(shape.square);
-    length = shape.square.length
+      shape.line.push(new Line(x, y, program));
+      length = shape.line.length;
+      indexPoint = shape.line[length - 1].points.length;
+  } else if (model === "square") {
+      shape.square.push(new Square(x, y, program));
+      length = shape.square.length;
+      indexPoint = shape.square[length - 1].points.length;
+  } else if (model === "rectangle") {
+      shape.rectangle.push(new Rectangle(x, y, program));
+      length = shape.rectangle.length;
+      indexPoint = shape.rectangle[length - 1].points.length;
+  } else {
+      return;
   }
-  else if (model === "rectangle") {
-    shape.rectangle.push(new Rectangle(x, y, program));
-    length = shape.rectangle.length
-  }
-  else {
-    return;
-  }
-  getObject(model,length)
-  console.log(model)
+  getObject(model, length, indexPoint);
+  getAllPoint(model, length)
 }
 
 function resetState() {
