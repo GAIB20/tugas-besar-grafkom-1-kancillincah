@@ -110,6 +110,18 @@ function getSelectedObject(array) {
                     indexPoint.push(point[1])    
                 }   
             }
+        } else if (m == "p") {
+            if (array[i].length < 14) {
+                shapeSelection.push(shape.polygon[array[i][7] - 1]);
+                modelInserted.push(array[i]);
+            } else {
+                let point = array[i].split("point");
+                if (!modelInserted.includes(point[0])) {
+                    pointSelection.push(shape.polygon[array[i][7] - 1]);
+                    modelInserted.push(array[i]);
+                    indexPoint.push(point[1])
+                }
+            }
         }
     }
     return [shapeSelection, pointSelection, indexPoint];

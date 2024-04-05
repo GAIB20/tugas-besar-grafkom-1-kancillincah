@@ -75,6 +75,13 @@ editButton.addEventListener("click", function () {
       editButton.innerHTML = '<i class="fas fa-edit"></i><p> Finish Edit </p>';
   } else {
       editButton.innerHTML = '<i class="fas fa-edit"></i><p> Edit object </p>';
+      // if model is polygon, then we need to check if the polygon is convex or not
+      for (let i = 0; i < shape["polygon"].length; i++) {
+          if (shape["polygon"][i].points.length > 2) {
+              shape["polygon"][i].points = convexHull(shape["polygon"][i].points);
+          }
+      }
+        
       uncheckAllCheckboxes();
   }
 

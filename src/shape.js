@@ -157,6 +157,9 @@ class Polygon extends Shape {
   }
 
   vertexAdded(x, y){
+    if (this.points.length > 2) {
+      this.points = convexHull(this.points);
+    }
     this.points.push(coor(canvas, x, y))
     let { r, g, b } = getRGB(rgb);
     this.colors.push([r, g, b, 1]);
