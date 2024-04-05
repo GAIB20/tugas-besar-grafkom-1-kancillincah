@@ -55,9 +55,16 @@ editButton.addEventListener("click", function () {
   console.log(pointSelection);
   console.log(indexPoint);
   
+  // rotation
   const rotationSlider = document.getElementById("rotation");
   rotationSlider.addEventListener("input", function () {
       rotateObject(shapeSelection, rotationSlider.value)
+  });
+
+  // color
+  const colorSlider = document.getElementById("color");
+  colorSlider.addEventListener("input", function () {
+      colorObject(shapeSelection, pointSelection, indexPoint, colorSlider.value)
   });
 });
 
