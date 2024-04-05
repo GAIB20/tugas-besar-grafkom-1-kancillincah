@@ -421,12 +421,18 @@ function load() {
         });
       });
       renderObject();
+      displayFileName(file.name);
     };
 
     reader.readAsText(file);
   };
 
   input.click();
+}
+
+function displayFileName(fileName) {
+  const namafileElement = document.getElementById("namafile");
+  namafileElement.innerText = fileName;
 }
 
 
