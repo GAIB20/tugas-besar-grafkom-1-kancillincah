@@ -32,8 +32,8 @@ squareButton.addEventListener("click", function () {
 const rectangleButton = document.getElementById("rectangle");
 rectangleButton.addEventListener("click", function () {
     drawType = "rectangle";
-    console.log(drawType);
 });
+
 const polygonButton = document.getElementById("polygon");
 polygonButton.addEventListener("click", function () {
   if (isPolygonActve == true) {
@@ -49,7 +49,22 @@ polygonButton.addEventListener("click", function () {
   }
   
 });
+const saveButton = document.getElementById("save");
+saveButton.addEventListener("click", function () {
+  save();
+});
 
+const clearButton = document.getElementById("clear-canvas");
+clearButton.addEventListener("click", function (e) {
+    if (!editFlag) {
+        location.reload();
+    }
+});
+
+const loadButton = document.getElementById("load");
+loadButton.addEventListener("click", function () {
+  load();
+});
 
 /* ==== Edit Button ==== */ 
 const editButton = document.getElementById("edit");
@@ -81,6 +96,25 @@ editButton.addEventListener("click", function () {
   rotationSlider.addEventListener("input", function () {
       rotateObject(shapeSelection, rotationSlider.value)
   });
+
+  // dilatation
+  const dilatationSlider = document.getElementById("dilatation");
+  dilatationSlider.addEventListener("input", function () {
+    dilateObject(shapeSelection, dilatationSlider.value)
+  });
+
+  // translation X
+  const translationXSlider = document.getElementById("translationX");
+  translationXSlider.addEventListener("input", function () {
+    translateXObject(shapeSelection, pointSelection, indexPoint, translationXSlider.value)
+  });
+
+  // translation Y
+  const translationYSlider = document.getElementById("translationY");
+  translationYSlider.addEventListener("input", function () {
+    translateYObject(shapeSelection, pointSelection, indexPoint, translationYSlider.value)
+  });
+
 
   // color
   const colorSlider = document.getElementById("color");
@@ -170,6 +204,11 @@ const fragmentShaderText = `
 
 const gl = canvas.getContext("webgl");
 const program = createShaderProgram(vertexShaderText, fragmentShaderText);
+
+window.onload = function start () {
+  clear();
+};
+
 
 function clear() {
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
@@ -304,11 +343,100 @@ function draw(model, x, y) {
   }
   if (drawType != "polygon") {
     getObject(model, length, indexPoint);
+    console.log(model, length, indexPoint);
     getAllPoint(model, length)
   }
 }
 
-function resetState() {
+function save() {
+  const shapeJSON = JSON.stringify(shape, null, 2);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([shapeJSON], {
+    type: "text/plain"
+  }))
+  a.setAttribute("download", "shape.json");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function drawShape(model, points, colors, centroid) {
+  let obj;
+  switch (model) {
+    case "line":
+      obj = new Line(0, 0);
+      break;
+    case "square":
+      obj = new Square(0, 0);
+      break;
+    case "rectangle":
+      obj = new Rectangle(0, 0);
+      break;
+    case "polygon":
+      obj = new Polygon(polyPoints);
+      break;
+    default:
+      console.error("Invalid shape model");
+      return;
+  }
+
+  obj.points = points;
+  obj.colors = colors;
+  obj.centroid = centroid;
+
+  shape[model].push(obj);
+
+  // Render the object
+  obj.render(program);
+
+  // Update object selection and points
+  getObject(model, shape[model].length, obj.points.length);
+  getAllPoint(model, shape[model].length);
+}
+
+
+function load() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+
+  input.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function() {
+      const data = JSON.parse(reader.result);
+
+      // Clear existing shapes before loading new ones
+      reset();
+      clearGetObject();
+
+      // Iterate through each shape type in the loaded data
+      Object.keys(data).forEach(model => {
+        data[model].forEach(shapeData => {
+          const points = shapeData.points;
+          const colors = shapeData.colors;
+          const centroid = shapeData.centroid;
+          drawShape(model, points, colors, centroid);
+        });
+      });
+      renderObject();
+      displayFileName(file.name);
+    };
+
+    reader.readAsText(file);
+  };
+
+  input.click();
+}
+
+function displayFileName(fileName) {
+  const namafileElement = document.getElementById("namafile");
+  namafileElement.innerText = fileName;
+}
+
+
+function reset() {
   shape.line = [];
   shape.polygon = [];
   shape.rectangle = [];

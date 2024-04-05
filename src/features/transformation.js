@@ -1,4 +1,7 @@
 let tempRotation = 0;
+let tempDilataion = 1;
+let tempTranslationX = 0;
+let tempTranslationY = 0;
 
 function getObject(shape, indexObject, indexPoint) {
     var list = document.getElementById("List");
@@ -17,6 +20,11 @@ function getObject(shape, indexObject, indexPoint) {
         `;
         object.appendChild(point);
     }
+}
+
+function clearGetObject() {
+    var list = document.getElementById("List");
+    list.innerHTML = ''; // Clear all child elements
 }
 
 function getAllPoint(shape, indexObject) {
@@ -133,3 +141,194 @@ function rotateObject(shapeSelection, value) {
 
     tempRotation = rotation;
 }
+
+function dilateObject(shapeSelection, value) {
+    console.log(value);
+    let dilatation = value;
+
+    shapeSelection.forEach(shape => {
+        let center = centroid(shape.points);
+
+        // Dilation on coordinates
+        shape.points.forEach(point => {
+            const x = point[0] - center[0];
+            const y = point[1] - center[1];
+
+            point[0] = center[0] + ((point[0] - center[0]) * dilatation) / tempDilataion;
+            point[1] = center[1] + ((point[1] - center[1]) * dilatation) / tempDilataion;
+        });
+    });
+    tempDilataion = dilatation;
+}
+
+function translateXObject(shapeSelection, pointSelection, indexPoint, value) {
+    console.log(value);
+    let translationX = value;
+
+    console.log("shapeSelection", shapeSelection);
+    shapeSelection.forEach(shape => {
+        shape.points.forEach(point => {
+            point[0] += translationX - tempTranslationX;
+        });
+    });
+
+    pointSelection.forEach((point, index) => {
+        let shape = point
+        if (shape.constructor.name == "Square") {
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex][1] -= translationX - tempTranslationX;
+
+                shape.points[squarePointIndex + 1][1] -= translationX - tempTranslationX;
+                shape.points[squarePointIndex + 2][0] += translationX - tempTranslationX;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex][1] += translationX - tempTranslationX;
+
+                shape.points[squarePointIndex + 2][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex - 1][1] += translationX - tempTranslationX;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex][1] += translationX - tempTranslationX;
+
+                shape.points[squarePointIndex - 2][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex + 1][1] += translationX - tempTranslationX;
+            } else {
+                shape.points[squarePointIndex][0] += translationX - tempTranslationX;
+                shape.points[squarePointIndex][1] -= translationX - tempTranslationX;
+
+                shape.points[squarePointIndex - 1][1] -= translationX - tempTranslationX;
+                shape.points[squarePointIndex - 2][0] += translationX - tempTranslationX;
+            }
+            
+        } else if (shape.constructor.name == "Rectangle") {
+            let ratio = 
+                (shape.points[0][0] - shape.points[1][0]) /
+                (shape.points[0][1] - shape.points[2][1]);
+            if (ratio < 0) {
+                ratio *= -1;
+            }
+            let width = translationX - tempTranslationX;
+            let height = width / ratio;
+
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex + 1][1] -= height;
+                shape.points[squarePointIndex + 2][0] += width;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] += height;
+
+                shape.points[squarePointIndex + 2][0] += width;
+                shape.points[squarePointIndex - 1][1] += height;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] += height;
+
+                shape.points[squarePointIndex - 2][0] += width;
+                shape.points[squarePointIndex + 1][1] += height;
+            } else {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex - 1][1] -= height;
+                shape.points[squarePointIndex - 2][0] += width;
+            }
+        } else {
+            shape.points[indexPoint[index] - 1][0] += translationX - tempTranslationX;
+        }
+    });
+    tempTranslationX = translationX;       
+}
+
+function translateYObject(shapeSelection, pointSelection, indexPoint, value) {
+    console.log(value);
+    let translationY = value;
+
+    console.log("shapeSelection", shapeSelection);
+    shapeSelection.forEach(shape => {
+        shape.points.forEach(point => {
+            point[1] += translationY - tempTranslationY;
+        });
+    });
+
+    pointSelection.forEach((point, index) => {
+        let shape = point
+        if (shape.constructor.name == "Square") {
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex + 1][1] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex + 2][0] += translationY - tempTranslationY;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex + 2][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex - 1][1] -= translationY - tempTranslationY;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex - 2][0] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex + 1][1] -= translationY - tempTranslationY;
+            } else {
+                shape.points[squarePointIndex][0] += translationY - tempTranslationY;
+                shape.points[squarePointIndex][1] -= translationY - tempTranslationY;
+
+                shape.points[squarePointIndex - 1][1] -= translationY - tempTranslationY;
+                shape.points[squarePointIndex - 2][0] += translationY - tempTranslationY;
+            }
+            
+        } else if (shape.constructor.name == "Rectangle") {
+            let ratio = 
+                (shape.points[0][0] - shape.points[1][0]) /
+                (shape.points[0][1] - shape.points[2][1]);
+            if (ratio < 0) {
+                ratio *= -1;
+            }
+            let width = translationY - tempTranslationY;
+            let height = width / ratio;
+
+            let squarePointIndex = indexPoint[index] - 1;
+            if (squarePointIndex == 0) {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex + 1][1] -= height;
+                shape.points[squarePointIndex + 2][0] += width;
+            } else if (squarePointIndex == 1) {
+                shape.points[squarePointIndex][0] -= width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex + 2][0] -= width;
+                shape.points[squarePointIndex - 1][1] -= height;
+            } else if (squarePointIndex == 2) {
+                shape.points[squarePointIndex][0] -= width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex - 2][0] -= width;
+                shape.points[squarePointIndex + 1][1] -= height;
+            } else {
+                shape.points[squarePointIndex][0] += width;
+                shape.points[squarePointIndex][1] -= height;
+
+                shape.points[squarePointIndex - 1][1] -= height;
+                shape.points[squarePointIndex - 2][0] += width;
+            }
+        } else {
+            shape.points[indexPoint[index] - 1][1] += translationY - tempTranslationY;
+        }
+    });
+   tempTranslationY = translationY;
+}
+
+
+
+
